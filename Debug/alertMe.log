@@ -1,5 +1,1 @@
-﻿  alertMe.cpp
-c:\users\anon\source\repos\alertme\alertme\alertme.cpp(66): warning C4101: 'res': unreferenced local variable
-c:\users\anon\source\repos\alertme\alertme\alertme.cpp(65): warning C4101: 'curl': unreferenced local variable
-c:\users\anon\source\repos\alertme\alertme\alertme.cpp(137): warning C4715: 'getCoords': not all control paths return a value
-  alertMe.vcxproj -> C:\Users\anon\source\repos\alertMe\Debug\alertMe.exe
+﻿Debug\alertMe.obj : fatal error LNK1112: module machine type 'x86' conflicts with target machine type 'x64'

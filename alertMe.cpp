@@ -6,23 +6,31 @@
 #include <fstream>
 #include <ctime>
 #include <iomanip>
+#include <istream>
 #include "libs/rapidjson/document.h"
 #include "libs/rapidjson/stringbuffer.h"
 #include "libs/rapidjson/writer.h"
 #include "libs/rapidjson/filereadstream.h"
-#include "../alertMe/curl/curl.h"
+#include "libs/vcpkg/buildtrees/cpprestsdk/src/v2.10.10-dc225cdbd9/Release/include/cpprest/http_client.h"
 #include <unordered_map>
 
-#pragma warning(disable:4996)
+
+//#include "curl/curl.h"
+//#include "curl/easy.h"
+#include "C:/Users/anon/curl/builds/libcurl-vc-x64-release-dll-ipv6-sspi-winssl/include/curl/curl.h"
+#include "C:/Users/anon/curl/builds/libcurl-vc-x64-release-dll-ipv6-sspi-winssl/include/curl/easy.h"
+#pragma comment (lib, "C:/Users/anon/curl/builds/libcurl-vc-x64-release-dll-ipv6-sspi-winssl/lib/libcurl.lib")
 
 #define CURL_STATICLIB
 
-#ifdef _DEBUG
-#	pragma comment (lib, "../alertMe/curl/libcurl_a_debug.lib")
-#else
-#	pragma comment (lib, "../alertMe/curl/libcurl_a.lib")
-#endif
+#pragma warning(disable:4996)
 
+/*#ifdef _DEBUG
+#	pragma comment (lib, "curl/libcurl_a_debug.lib")
+#else
+#	pragma comment (lib, "curl/libcurl_a.lib")
+#endif
+*/
 //Pre declaration of functions, are defined under main function
 std::string getCoords();
 std::string writeLink(std::string fullLink);
@@ -51,6 +59,8 @@ int main()
 
 	//Generates link with user coordinates
 	fullURL = preURL + line_ + "/" + usrCoords;
+	char *charUrl = &fullURL[0u];
+	char *charPreUrl = &preURL[0u];
 
 	//Writes the link to a file
 	std::cout << writeLink(fullURL);
@@ -61,26 +71,31 @@ int main()
 
 			//********************************************
 			//********************cURL********************
-
 			CURL *curl;
+			FILE *fd;
 			CURLcode res;
-			struct curl_slist *headers = NULL; //init to NULL is important
-			//headers = curl_slist_append(headers, "Accept: application/json");
-			//curl_slist_append(headers, "Content-Type: application/json");
-			//curl_slist_append(headers, "charsets: utf-8");
-
-			//curl = curl_easy_init();
-
+			char outfilename[FILENAME_MAX] = "debugOld/repoOld.json";
+			curl = curl_easy_init();
+			if (curl) {
+				fd = fopen(outfilename, "wb");
+				curl_easy_setopt(curl, CURLOPT_URL, charUrl);
+				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+				curl_easy_setopt(curl, CURLOPT_WRITEDATA, fd);
+				res = curl_easy_perform(curl);
+				curl_easy_cleanup(curl);
+				fclose(fd);
+			}
+			
 			//********************cURL********************
 			//********************************************
 
 
 			//********************************************
-			//****************JSONCPP*********************
+			//****************rapidjson*******************
+			//thanks to: https://github.com/Tencent/rapidjson/issues/1343
 			
 			//std::ifstream jFile("../alertMe/debugOld/repoOld.json");
 			FILE* fp = fopen("../alertMe/debugOld/repoOld.json", "rb");
-
 			char readBuffer[65536];//in bytes
 
 			rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
@@ -88,25 +103,27 @@ int main()
 			rapidjson::Document d;
 			d.ParseStream(is);
 			
-			const rapidjson::Value& prog = d["data"];
+			const rapidjson::Value& a = d["hourly"];
+			const rapidjson::Value& prog = a["data"];
 
 			//Loops through each element of data array
 			for (rapidjson::Value::ConstValueIterator p = prog.Begin(); p != prog.End(); p++) {
 				std::time_t unixTime = (*p)["time"].GetInt();
+				std::string weathSummary = (*p)["summary"].GetString();
 
 				//Output formatted forecast
-				std::cout << std::put_time(std::gmtime(&unixTime), "%c:") << " " 
-						  << (*p)["summary"].GetString() << " " << (*p)["temperature"].GetFloat()
+				std::cout << std::left << std::put_time(std::gmtime(&unixTime), "%c:") << " " 
+						  << weathSummary << " " << (*p)["temperature"].GetFloat()
 						  << "C " << std::endl;
 				
 			}
 
 			fclose(fp);
-			//****************JSONCPP*********************
+			//****************rapidjson*******************
 			//********************************************
 
 	//Waits for input and deletes file with link
-	//delLink();
+	delLink();
 
 }//Main function
 

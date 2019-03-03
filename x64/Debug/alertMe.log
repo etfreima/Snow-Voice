@@ -1,0 +1,3 @@
+﻿  alertMe.cpp
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(154): warning C4715: 'getCoords': not all control paths return a value
+  alertMe.vcxproj -> C:\Users\anon\source\repos\alertMe\x64\Debug\alertMe.exe
