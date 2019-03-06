@@ -8,7 +8,12 @@
 #include <iomanip>
 #include <istream>
 #include <unordered_map>
-//#include <map>
+#include <stdio.h>
+#include <io.h>
+#include <stdlib.h>
+#include <sstream>
+#include <any>
+#include "libs/twilio/twilio.hh"
 #include "libs/rapidjson/document.h"
 #include "libs/rapidjson/stringbuffer.h"
 #include "libs/rapidjson/writer.h"
@@ -27,11 +32,13 @@
 std::string INP_COORDS;
 std::string POSTAL_CODE;
 std::string GEO_PATH = "debugOld/repoForecast.txt";
+std::string USR_ID;
 
 //Pre declaration of functions, are defined under main function
 std::string getCoords();
 std::string writeLink(std::string fullLink);
 std::string getFile(std::string path);
+std::string sendSMS(std::string message, std::string usrID);
 void delLink();
 
 int main()
@@ -91,7 +98,9 @@ int main()
 			//****************rapidjson*******************
 			//thanks to: https://github.com/Tencent/rapidjson/issues/1343
 			
-			//std::ifstream jFile("../alertMe/debugOld/repoOld.json");
+			//std::vector<std::vector<any> > weatherReport;
+			std::string smsMessage;
+
 			FILE* fp = fopen("../alertMe/debugOld/repoOld.json", "rb");
 			char readBuffer[65536];//in bytes
 
@@ -102,19 +111,70 @@ int main()
 			const rapidjson::Value& a = d["hourly"];
 			const rapidjson::Value& prog = a["data"];
 
+			int h = 0;
+			float weatherReport[24][7];
+			bool sendMessage = false;
 			//Loops through each element of data array
-			for (rapidjson::Value::ConstValueIterator p = prog.Begin(); p != prog.End(); p++) {
+			for (rapidjson::Value::ConstValueIterator p = prog.Begin(); p != prog.End(), h <= 23; p++, h++) {
 				std::time_t unixTime = (*p)["time"].GetInt();
 				std::string weathSummary = (*p)["summary"].GetString();
+				
+				//std::vector<std::vector<std::string>> weatherReport;
 
-				//Output formatted forecast
-				std::cout << std::left << std::put_time(std::gmtime(&unixTime), "%c:") << " " 
+				float precipIntensity = (*p)["precipIntensity"].GetFloat();
+				float precipProbability = (*p)["precipProbability"].GetFloat();
+				//double precipAccumulation = (*p)["precipAccumulation"].GetDouble();
+				float temperature = (*p)["temperature"].GetFloat();
+				float apparentTemperature = (*p)["apparentTemperature"].GetFloat();
+				float humidity = (*p)["humidity"].GetFloat();
+				float windSpeed = (*p)["windSpeed"].GetFloat();
+				float visibility = (*p)["visibility"].GetFloat();
+
+				weatherReport[h][0] = precipIntensity;
+				weatherReport[h][1] = precipProbability;
+				weatherReport[h][2] = temperature;
+				weatherReport[h][3] = apparentTemperature;
+				weatherReport[h][4] = humidity;
+				weatherReport[h][5] = windSpeed;
+				weatherReport[h][6] = visibility;
+
+				double
+					defaultLimit = 0.01,
+					defaultLimitAlertPI = 0.01,
+					defaultLimitAlertPP = 0.01,
+					defaultLimitAlertT = 0.01,
+					defaultLimitAlertAT = 0.01,
+					defaultLimitAlertH = 0.01,
+					defaultLimitAlertWS = 0.01,
+					defaultLimitAlertV = 0.01;
+
+				for (int wRprtItr = 0; wRprtItr <= 6; wRprtItr++) {
+					std::cout << weatherReport[h][wRprtItr] << ", ";
+					if (wRprtItr == 6) {
+						std::cout << "\n";
+					}
+					else if (weatherReport[h][wRprtItr] > defaultLimit) {
+						smsMessage = "Weather%20Alert!";
+						sendMessage = true;
+						//sendSMS(smsMessage, USR_ID);
+					}
+					
+
+				}
+				//Output formatted forecast - temporary
+				/*std::cout << std::left << std::put_time(std::localtime(&unixTime), "%c:") << " " 
 						  << weathSummary << " " << (*p)["temperature"].GetFloat()
-						  << "F " << std::endl;
+						  << "F " << std::endl;*/
+			}//Main JSON parse loop
+
+			if (sendMessage != false) {
+				sendSMS(smsMessage, USR_ID);
 			}
-			fclose(fp);
+				fclose(fp);
+			
 			//****************rapidjson*******************
 			//********************************************
+
 
 	//Waits for input and deletes file with fullUrl
 	delLink();
@@ -128,14 +188,13 @@ std::string getFile(std::string path) {
 
 	if (file_.is_open()) {
 		while (getline(file_, nLine)) {
-			//std::cout << line_ << "\n";
+			//std::cout << nLine.length();
 			return nLine;
 		}
 		file_.close();
 	}
 	else {
 		std::cout << "file is not open" << "\n";
-		//std::cin.get();
 		return "Error 0x000001: inaccesable file location";
 	}
 	return "Unknown error in function 'getFile()'"; //This should never happen
@@ -147,11 +206,10 @@ std::string getCoords() {
 	//Get user input loop
 	do {
 		float usrLat = 0;
-		float usrLong = 0;/*
-		std::cout << "Input latitude: ";
-		std::cin >> usrLat;
-		std::cout << "Input longitude: ";
-		std::cin >> usrLong;*/
+		float usrLong = 0;
+		std::cout << "Enter phone number (no dashes): ";
+		std::cin >> USR_ID;
+		system("pause");
 		std::cout << "Input postal code: ";
 		std::cin >> POSTAL_CODE;
 
@@ -227,4 +285,33 @@ std::string writeLink(std::string fullLink) {
 void delLink() {
 	system("pause");
 	std::remove("debugOld/pchDep.txt");
+}
+
+std::string sendSMS(std::string smsMessage, std::string usrID) {
+	std::string simplePath = "debugOld/libDoc.txt";
+	std::string preSmsURL = "https://app2.simpletexting.com/v1/send?token=";
+
+	std::cout << "\n" << getFile(simplePath) << "\n";
+	std::string fullSmsURL = preSmsURL + getFile(simplePath) + "&phone=" + usrID + "&message=" + smsMessage;
+	char *charSmsURL = &fullSmsURL[0u];
+
+	std::cout << fullSmsURL;
+
+	//Outputs URL contents into a file
+	CURL *curl;
+	FILE *fd;
+	CURLcode res;
+	char readKey[FILENAME_MAX] = "debugOld/noSuccess.md";
+	curl = curl_easy_init();
+	if (curl) {
+		fd = fopen(readKey, "wb");
+		curl_easy_setopt(curl, CURLOPT_URL, charSmsURL);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fd);
+		res = curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+		fclose(fd);
+	}
+
+	return "Unknown error in function 'sendSMS()'";//this should never happen
 }

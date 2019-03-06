@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response><code>1</code><message>The request succeeded</message><smsid>5c7f45150a975a7c8c8c8af5</smsid></response>

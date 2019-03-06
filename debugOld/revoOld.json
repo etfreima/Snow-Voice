@@ -1,4 +1,59 @@
 {
-   "results" : [],
-   "status" : "ZERO_RESULTS"
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "01069",
+               "short_name" : "01069",
+               "types" : [ "postal_code" ]
+            },
+            {
+               "long_name" : "Palmer",
+               "short_name" : "Palmer",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Massachusetts",
+               "short_name" : "MA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "Palmer, MA 01069, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 42.2368119,
+                  "lng" : -72.240754
+               },
+               "southwest" : {
+                  "lat" : 42.1399118,
+                  "lng" : -72.3950799
+               }
+            },
+            "location" : {
+               "lat" : 42.1842549,
+               "lng" : -72.2955915
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 42.2368119,
+                  "lng" : -72.240754
+               },
+               "southwest" : {
+                  "lat" : 42.1399118,
+                  "lng" : -72.3950799
+               }
+            }
+         },
+         "place_id" : "ChIJXdMTn6-45okRapR6KwYs5sY",
+         "types" : [ "postal_code" ]
+      }
+   ],
+   "status" : "OK"
 }

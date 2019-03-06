@@ -1,2 +1,4 @@
 ﻿  alertMe.cpp
+  class any is only available with C++17 or later.
+c:\users\anon\source\repos\alertme\alertme\libs\twilio\type_conversion.hh(14): warning C4101: 'e': unreferenced local variable
   alertMe.vcxproj -> C:\Users\anon\source\repos\alertMe\x64\Debug\alertMe.exe
