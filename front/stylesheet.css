@@ -1,6 +1,21 @@
 body{
-    background-image: url(images/snowStorm.jpg);
+    background-image: url(images/bSnowStorm.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     
+}
+.centerBox{
+    
+    background-color: white;
+    
+    height: 220px;
+    width: 50%;
+    border: 5px solid lightblue;
+    padding: 1px;
+    margin-right: 25%;
+    margin-left: 25%;
+    
+    border-radius: 20px;
+    
+    align-content: center;
 }

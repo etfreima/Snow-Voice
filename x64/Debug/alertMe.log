@@ -1,4 +1,12 @@
 ﻿  alertMe.cpp
   class any is only available with C++17 or later.
 c:\users\anon\source\repos\alertme\alertme\libs\twilio\type_conversion.hh(14): warning C4101: 'e': unreferenced local variable
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(155): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(156): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(157): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(158): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(159): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(160): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(161): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\anon\source\repos\alertme\alertme\alertme.cpp(162): warning C4305: 'initializing': truncation from 'double' to 'float'
   alertMe.vcxproj -> C:\Users\anon\source\repos\alertMe\x64\Debug\alertMe.exe

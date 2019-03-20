@@ -3,56 +3,60 @@
       {
          "address_components" : [
             {
-               "long_name" : "01069",
-               "short_name" : "01069",
-               "types" : [ "postal_code" ]
-            },
-            {
-               "long_name" : "Palmer",
-               "short_name" : "Palmer",
+               "long_name" : "Independence",
+               "short_name" : "Independence",
                "types" : [ "locality", "political" ]
             },
             {
-               "long_name" : "Massachusetts",
-               "short_name" : "MA",
+               "long_name" : "Fawn Creek",
+               "short_name" : "Fawn Creek",
+               "types" : [ "administrative_area_level_3", "political" ]
+            },
+            {
+               "long_name" : "Montgomery County",
+               "short_name" : "Montgomery County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Kansas",
+               "short_name" : "KS",
                "types" : [ "administrative_area_level_1", "political" ]
             },
             {
                "long_name" : "United States",
                "short_name" : "US",
                "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "67301",
+               "short_name" : "67301",
+               "types" : [ "postal_code" ]
             }
          ],
-         "formatted_address" : "Palmer, MA 01069, USA",
+         "formatted_address" : "Independence, KS 67301, USA",
          "geometry" : {
-            "bounds" : {
-               "northeast" : {
-                  "lat" : 42.2368119,
-                  "lng" : -72.240754
-               },
-               "southwest" : {
-                  "lat" : 42.1399118,
-                  "lng" : -72.3950799
-               }
-            },
             "location" : {
-               "lat" : 42.1842549,
-               "lng" : -72.2955915
+               "lat" : 37.09024,
+               "lng" : -95.712891
             },
-            "location_type" : "APPROXIMATE",
+            "location_type" : "GEOMETRIC_CENTER",
             "viewport" : {
                "northeast" : {
-                  "lat" : 42.2368119,
-                  "lng" : -72.240754
+                  "lat" : 37.0915889802915,
+                  "lng" : -95.71154201970849
                },
                "southwest" : {
-                  "lat" : 42.1399118,
-                  "lng" : -72.3950799
+                  "lat" : 37.08889101970851,
+                  "lng" : -95.7142399802915
                }
             }
          },
-         "place_id" : "ChIJXdMTn6-45okRapR6KwYs5sY",
-         "types" : [ "postal_code" ]
+         "place_id" : "ChIJpS60CuyBt4cRQYtu2PkTBlo",
+         "plus_code" : {
+            "compound_code" : "37RP+3R Dearing, Fawn Creek, KS, United States",
+            "global_code" : "869637RP+3R"
+         },
+         "types" : [ "doctor", "establishment", "health", "point_of_interest" ]
       }
    ],
    "status" : "OK"

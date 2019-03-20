@@ -123,7 +123,7 @@ int main()
 
 				float precipIntensity = (*p)["precipIntensity"].GetFloat();
 				float precipProbability = (*p)["precipProbability"].GetFloat();
-				//double precipAccumulation = (*p)["precipAccumulation"].GetDouble();
+				//float precipAccumulation = (*p)["precipAccumulation"].GetFloat();
 				float temperature = (*p)["temperature"].GetFloat();
 				float apparentTemperature = (*p)["apparentTemperature"].GetFloat();
 				float humidity = (*p)["humidity"].GetFloat();
@@ -138,25 +138,66 @@ int main()
 				weatherReport[h][5] = windSpeed;
 				weatherReport[h][6] = visibility;
 
-				double
-					defaultLimit = 0.01,
-					defaultLimitAlertPI = 0.01,
-					defaultLimitAlertPP = 0.01,
-					defaultLimitAlertT = 0.01,
-					defaultLimitAlertAT = 0.01,
-					defaultLimitAlertH = 0.01,
-					defaultLimitAlertWS = 0.01,
-					defaultLimitAlertV = 0.01;
+				int userTimePreference = 0;		//How many hours in advance the user would like to be alerted
+
+				std::string strWeatherReportPI = std::to_string(weatherReport[userTimePreference][0]);
+				std::string strWeatherReportPP = std::to_string(weatherReport[userTimePreference][1]);
+				std::string strWeatherReportT = std::to_string(weatherReport[userTimePreference][2]);
+				std::string strWeatherReportAT = std::to_string(weatherReport[userTimePreference][3]);
+				std::string strWeatherReportH = std::to_string(weatherReport[userTimePreference][4]);
+				std::string strWeatherReportWS = std::to_string(weatherReport[userTimePreference][5]);
+				std::string strWeatherReportV = std::to_string(weatherReport[userTimePreference][6]);
+
+				//Default values to initiate sending SMS (sendSMS function)
+				//If weather reports show higher than these values, unless user
+				//inputs different values, SMS will send
+				float
+					defaultLimit = 0.1,
+					defaultLimitAlertPI = 0.1,		//Precipitation Intensity	
+					defaultLimitAlertPP = 0.1,		//Precipitation Probability
+					defaultLimitAlertT = 0.1,		//Temperature
+					defaultLimitAlertAT = 0.1,		//Apparent Temperature
+					defaultLimitAlertH = 0.1,		//Humidity
+					defaultLimitAlertWS = 0.1,		//Wind Speed
+					defaultLimitAlertV = 0.1;		//Visibility
 
 				for (int wRprtItr = 0; wRprtItr <= 6; wRprtItr++) {
 					std::cout << weatherReport[h][wRprtItr] << ", ";
 					if (wRprtItr == 6) {
 						std::cout << "\n";
 					}
-					else if (weatherReport[h][wRprtItr] > defaultLimit) {
+					else if (weatherReport[h][wRprtItr] > defaultLimit || weatherReport[h][wRprtItr] > defaultLimitAlertPI ||
+						weatherReport[h][wRprtItr] > defaultLimitAlertPP || weatherReport[h][wRprtItr] > defaultLimitAlertT ||
+						weatherReport[h][wRprtItr] > defaultLimitAlertAT || weatherReport[h][wRprtItr] > defaultLimitAlertH ||
+						weatherReport[h][wRprtItr] > defaultLimitAlertWS || weatherReport[h][wRprtItr] > defaultLimitAlertV
+						) {
 						smsMessage = "Weather%20Alert!";
-						sendMessage = true;
+						
 						//sendSMS(smsMessage, USR_ID);
+
+						if (weatherReport[userTimePreference][0] > defaultLimitAlertPI) {
+							smsMessage += "%0aPrecipitation%20Intensity:%20" + strWeatherReportPI; //Latin-1 character set
+						}
+						if (weatherReport[userTimePreference][1] > defaultLimitAlertPP) {
+							smsMessage += "%0aPrecipitation%20Probability:%20" + strWeatherReportPP;
+						}
+						if (weatherReport[userTimePreference][2] > defaultLimitAlertT) {
+							smsMessage += "%0aTemperature:%20" + strWeatherReportT;
+						}
+						/*if (weatherReport[userTimePreference][3] > defaultLimitAlertAT) {
+							smsMessage += "%0aApparent%20temperature:%20" + strWeatherReportAT;
+						}*/
+						if (weatherReport[userTimePreference][4] > defaultLimitAlertH) {
+							smsMessage += "%0aHumidity:%20" + strWeatherReportH;
+						}
+						if (weatherReport[userTimePreference][5] > defaultLimitAlertWS) {
+							smsMessage += "%0aWind%20Speed:%20" + strWeatherReportWS;
+						}
+						if (weatherReport[userTimePreference][6] > defaultLimitAlertV) {
+							smsMessage += "%0aVisibility:%20" + strWeatherReportV;
+						}
+
+						sendMessage = true;
 					}
 					
 
